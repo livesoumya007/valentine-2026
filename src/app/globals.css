@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #FFF5F9;
+  --background: #FFF8EC;
   --foreground: #3D0D22;
 }
 
@@ -14,11 +14,12 @@
 }
 
 html {
+  scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
 }
 
 body {
-  background: linear-gradient(160deg, #FFF5F9 0%, #FDE8F0 25%, #F0E0FF 50%, #E8D5FA 75%, #FFF0F5 100%);
+  background: linear-gradient(160deg, #FDFBF7 0%, #FFF8EC 30%, #FFF5E1 60%, #FFF1D0 100%);
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
   min-height: 100vh;
@@ -31,7 +32,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #FFF5F9;
+  background: #FFF8EC;
 }
 
 ::-webkit-scrollbar-thumb {

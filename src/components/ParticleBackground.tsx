@@ -207,8 +207,11 @@ export default function ParticleBackground() {
         resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
 
-        // Plenty of particles, distributed evenly
-        const count = Math.max(90, Math.floor((window.innerWidth * window.innerHeight) / 8000));
+        // Fewer particles on mobile for smooth 60fps
+        const isMobile = window.innerWidth < 768;
+        const count = isMobile
+            ? Math.min(45, Math.floor((window.innerWidth * window.innerHeight) / 12000))
+            : Math.max(90, Math.floor((window.innerWidth * window.innerHeight) / 8000));
         const particles: Particle[] = [];
 
         for (let i = 0; i < count; i++) {
@@ -235,7 +238,7 @@ export default function ParticleBackground() {
                 vx: 0,
                 vy: 0,
                 size: type === "sparkle" ? 3 + Math.random() * 4 : type === "petal" ? 5 + Math.random() * 7 : 7 + Math.random() * 9,
-                opacity: 0.2 + Math.random() * 0.45,
+                opacity: 0.55 + Math.random() * 0.45,
                 type,
                 rotation: Math.random() * Math.PI * 2,
                 rotationSpeed: (Math.random() - 0.5) * 0.01,
@@ -261,39 +264,66 @@ export default function ParticleBackground() {
             const mouse = mouseRef.current;
             time += 16;
 
+            // Center clear zone — ellipse where particles are pushed away
+            const clearCX = w / 2;
+            const clearCY = h / 2;
+            const clearRX = w * 0.22; // horizontal radius
+            const clearRY = h * 0.2;  // vertical radius
+
             for (const p of particles) {
-                // Gentle floating
-                const floatX = Math.cos(time * 0.001 * p.floatSpeed * 100 + p.floatOffset) * 0.2;
-                const floatY = Math.sin(time * 0.001 * p.floatSpeed * 100 + p.floatOffset) * 0.25;
-                p.baseX += floatX * 0.01;
-                p.baseY += floatY * 0.01;
+                // Continuous gentle drift — slow, organic movement
+                const driftX = Math.sin(time * 0.0003 + p.floatOffset) * 0.15;
+                const driftY = Math.cos(time * 0.00025 + p.floatOffset * 1.3) * 0.12;
+                p.baseX += driftX * 0.04;
+                p.baseY += driftY * 0.04;
 
-                // Mouse interaction — GENTLE attraction with DEAD ZONE around cursor
-                const dx = mouse.x - p.x;
-                const dy = mouse.y - p.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const deadZone = 80;   // No attraction within 80px of cursor
-                const maxDist = 280;   // Attraction radius
+                // Gentle rotation variation
+                p.rotationSpeed += (Math.sin(time * 0.0001 + p.floatOffset) * 0.0001);
+                p.rotationSpeed *= 0.99;
 
-                if (dist > deadZone && dist < maxDist) {
-                    // Slower, gentler force
-                    const force = ((maxDist - dist) / maxDist) * 0.005;
-                    p.vx += dx * force;
-                    p.vy += dy * force;
-                } else if (dist <= deadZone && dist > 0) {
-                    // Gently push away from cursor within dead zone
-                    const pushForce = ((deadZone - dist) / deadZone) * 0.008;
-                    p.vx -= dx * pushForce;
-                    p.vy -= dy * pushForce;
+                // Mouse interaction — gentle attraction with dead zone
+                const mdx = mouse.x - p.x;
+                const mdy = mouse.y - p.y;
+                const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+                const deadZone = 80;
+                const maxDist = 280;
+
+                if (mDist > deadZone && mDist < maxDist) {
+                    const force = ((maxDist - mDist) / maxDist) * 0.004;
+                    p.vx += mdx * force;
+                    p.vy += mdy * force;
+                } else if (mDist <= deadZone && mDist > 0) {
+                    const pushForce = ((deadZone - mDist) / deadZone) * 0.006;
+                    p.vx -= mdx * pushForce;
+                    p.vy -= mdy * pushForce;
                 }
 
-                // Spring back to base position (gentle)
-                p.vx += (p.baseX - p.x) * 0.004;
-                p.vy += (p.baseY - p.y) * 0.004;
+                // Center clear zone repulsion — push particles away from text area
+                const cdx = p.x - clearCX;
+                const cdy = p.y - clearCY;
+                const normDist = Math.sqrt((cdx * cdx) / (clearRX * clearRX) + (cdy * cdy) / (clearRY * clearRY));
 
-                // More damping = slower overall movement
-                p.vx *= 0.96;
-                p.vy *= 0.96;
+                if (normDist < 1.0) {
+                    // Inside the clear zone — push outward
+                    const pushStrength = (1.0 - normDist) * 0.02;
+                    const angle = Math.atan2(cdy, cdx);
+                    p.vx += Math.cos(angle) * pushStrength * clearRX * 0.05;
+                    p.vy += Math.sin(angle) * pushStrength * clearRY * 0.05;
+                } else if (normDist < 1.3) {
+                    // Just outside — gentle nudge to keep them away
+                    const nudge = (1.3 - normDist) * 0.003;
+                    const angle = Math.atan2(cdy, cdx);
+                    p.vx += Math.cos(angle) * nudge * 2;
+                    p.vy += Math.sin(angle) * nudge * 2;
+                }
+
+                // Spring back to base position (very gentle)
+                p.vx += (p.baseX - p.x) * 0.003;
+                p.vy += (p.baseY - p.y) * 0.003;
+
+                // Smooth damping
+                p.vx *= 0.97;
+                p.vy *= 0.97;
 
                 p.x += p.vx;
                 p.y += p.vy;
@@ -306,7 +336,14 @@ export default function ParticleBackground() {
                 if (p.y < -60) { p.y = h + 60; p.baseY = p.y; }
                 if (p.y > h + 60) { p.y = -60; p.baseY = p.y; }
 
-                ctx.globalAlpha = p.opacity;
+                // Fade particles near clear zone edge for seamless look
+                let alphaMultiplier = 1;
+                if (normDist < 1.5) {
+                    alphaMultiplier = Math.min(1, (normDist - 0.8) / 0.7);
+                    alphaMultiplier = Math.max(0.05, alphaMultiplier);
+                }
+
+                ctx.globalAlpha = p.opacity * alphaMultiplier;
 
                 switch (p.type) {
                     case "tulip":

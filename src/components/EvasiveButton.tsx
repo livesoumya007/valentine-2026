@@ -71,9 +71,9 @@ export default function EvasiveButton({
                 onMouseEnter={moveButton}
                 onTouchStart={moveButton}
                 className="relative px-8 py-3 rounded-full font-semibold text-sm
-          bg-white/60 backdrop-blur-sm
-          border border-purple-200/60 text-purple-400/80
-          hover:shadow-lg hover:shadow-purple-200/30
+          bg-white shadow-md shadow-purple-200/40
+          border-2 border-purple-300 text-purple-600
+          hover:shadow-lg hover:shadow-purple-300/50 hover:border-purple-400
           transition-colors duration-300 cursor-pointer
           whitespace-nowrap"
             >

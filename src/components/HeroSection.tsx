@@ -11,63 +11,68 @@ interface HeroSectionProps {
 export default function HeroSection({ onSayYes }: HeroSectionProps) {
     return (
         <div className="relative z-10">
-            {/* ===== SECTION 1: White "Critical Question" ===== */}
+            {/* ===== SECTION 1: Cream "Critical Question" ===== */}
             <section
                 className="flex flex-col px-4 relative overflow-hidden"
                 style={{
-                    minHeight: "90vh",
-                    background: "#ffffff",
+                    height: "100vh",
+                    background: "#FDFBF7",
+                    scrollSnapAlign: "start",
                 }}
             >
-                {/* Minimal background: orbiting dots for "thinking" feel */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    {/* Outer orbit */}
-                    <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
-                        className="absolute w-[280px] h-[280px] sm:w-[360px] sm:h-[360px]"
-                    >
-                        <motion.div
-                            animate={{ opacity: [0.12, 0.3, 0.12] }}
-                            transition={{ duration: 3, repeat: Infinity }}
-                            className="absolute top-0 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-purple-300"
-                        />
-                        <motion.div
-                            animate={{ opacity: [0.08, 0.2, 0.08] }}
-                            transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                            className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-pink-300"
-                        />
-                    </motion.div>
-
-                    {/* Inner orbit — reverse */}
-                    <motion.div
-                        animate={{ rotate: -360 }}
-                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                        className="absolute w-[160px] h-[160px] sm:w-[220px] sm:h-[220px]"
-                    >
-                        <motion.div
-                            animate={{ opacity: [0.08, 0.22, 0.08] }}
-                            transition={{ duration: 4, repeat: Infinity }}
-                            className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-indigo-300"
-                        />
-                        <motion.div
-                            animate={{ opacity: [0.06, 0.18, 0.06] }}
-                            transition={{ duration: 4, repeat: Infinity, delay: 2 }}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-amber-300"
-                        />
-                    </motion.div>
-
-                    {/* Soft center glow */}
-                    <motion.div
-                        animate={{ scale: [1, 1.15, 1], opacity: [0.03, 0.07, 0.03] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute w-40 h-40 sm:w-52 sm:h-52 rounded-full
-              bg-gradient-to-br from-purple-100 via-pink-50 to-indigo-100 blur-3xl"
-                    />
-                </div>
-
                 {/* Content — upper portion */}
-                <div className="flex-1 flex flex-col items-center justify-start pt-[14vh] sm:pt-[16vh]">
+                <div className="flex-1 flex flex-col items-center justify-start pt-[14vh] sm:pt-[16vh] relative z-10">
+                    {/* Background Animation: Orbiting dots around the text */}
+                    <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none -z-10">
+                        {/* Outer orbit */}
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+                            className="w-[320px] h-[320px] sm:w-[500px] sm:h-[500px] relative"
+                        >
+                            <motion.div
+                                animate={{ opacity: [0.4, 0.8, 0.4] }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                                className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-purple-300 blur-[1px]"
+                            />
+                            <motion.div
+                                animate={{ opacity: [0.3, 0.6, 0.3] }}
+                                transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-pink-300 blur-[1px]"
+                            />
+                        </motion.div>
+                    </div>
+
+                    <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none -z-10">
+                        {/* Inner orbit — reverse */}
+                        <motion.div
+                            animate={{ rotate: -360 }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                            className="w-[200px] h-[200px] sm:w-[320px] sm:h-[320px] relative"
+                        >
+                            <motion.div
+                                animate={{ opacity: [0.4, 0.7, 0.4] }}
+                                transition={{ duration: 4, repeat: Infinity }}
+                                className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-indigo-300 blur-[1px]"
+                            />
+                            <motion.div
+                                animate={{ opacity: [0.3, 0.6, 0.3] }}
+                                transition={{ duration: 4, repeat: Infinity, delay: 2 }}
+                                className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-amber-300 blur-[1px]"
+                            />
+                        </motion.div>
+                    </div>
+
+                    <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none -z-10">
+                        {/* Soft center glow */}
+                        <motion.div
+                            animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            className="w-60 h-60 sm:w-80 sm:h-80 rounded-full
+                bg-gradient-to-br from-purple-100/50 via-pink-100/50 to-indigo-100/50 blur-3xl"
+                        />
+                    </div>
+
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -79,11 +84,14 @@ export default function HeroSection({ onSayYes }: HeroSectionProps) {
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.5, type: "spring" }}
-                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                bg-gray-50 border border-gray-200 mb-8"
+                            className="inline-flex items-center gap-2 px-5 py-2 rounded-full
+                                bg-amber-100/80 border border-amber-200/50 mb-8 backdrop-blur-sm shadow-lg shadow-amber-100/50"
                         >
-                            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                            <span className="text-xs text-gray-500 tracking-widest uppercase font-medium">
+                            <span className="relative flex h-3 w-3">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                            </span>
+                            <span className="text-sm text-amber-600 tracking-wider uppercase font-bold">
                                 Attention Required
                             </span>
                         </motion.div>
@@ -105,8 +113,8 @@ export default function HeroSection({ onSayYes }: HeroSectionProps) {
                             className="flex items-center justify-center gap-3 mb-6"
                         >
                             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold
-                bg-gradient-to-r from-purple-600 via-pink-500 to-amber-400
-                bg-clip-text text-transparent font-sans">
+                                bg-gradient-to-r from-purple-600 via-pink-500 to-amber-400
+                                bg-clip-text text-transparent font-sans pb-4">
                                 Incoming
                             </h2>
                             <motion.span
@@ -123,7 +131,7 @@ export default function HeroSection({ onSayYes }: HeroSectionProps) {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 1.5 }}
-                            className="flex items-center justify-center gap-2 mb-10"
+                            className="mt-2 flex items-center justify-center gap-2 mb-10"
                         >
                             {[0, 1, 2].map((i) => (
                                 <motion.div
@@ -170,6 +178,7 @@ export default function HeroSection({ onSayYes }: HeroSectionProps) {
             {/* ===== SECTION 2: Valentine question — pink/lavender theme ===== */}
             <section
                 className="min-h-screen flex flex-col items-center justify-center px-4 relative"
+                style={{ scrollSnapAlign: "start", background: "rgba(255, 248, 236, 0.55)" }}
             >
                 {/* Floating hearts */}
                 <motion.div
@@ -201,17 +210,21 @@ export default function HeroSection({ onSayYes }: HeroSectionProps) {
                     transition={{ duration: 1, ease: "easeOut" }}
                     className="text-center max-w-3xl"
                 >
-                    <p className="text-purple-500/70 text-sm sm:text-base tracking-[0.3em] uppercase mb-8">
+                    <p className="text-black text-sm sm:text-base tracking-[0.3em] uppercase mb-8 font-bold"
+                    >
                         A special question for you
                     </p>
 
                     <h1
-                        className="font-dancing text-5xl sm:text-7xl md:text-8xl lg:text-9xl
-              bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600
-              bg-clip-text text-transparent
-              leading-tight mb-10 drop-shadow-sm font-bold"
+                        className="font-sans text-5xl sm:text-6xl md:text-7xl lg:text-8xl
+                            font-extrabold text-gray-800
+                            leading-tight mb-10 tracking-tight"
                     >
-                        Will you be my Valentine?
+                        Will you be my{" "}
+                        <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-rose-400
+                            bg-clip-text text-transparent pb-2">
+                            Valentine?
+                        </span>
                     </h1>
 
                     <div className="flex items-center justify-center gap-3 mb-10">
